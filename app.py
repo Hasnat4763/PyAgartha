@@ -1,22 +1,11 @@
 from api import API
+from templating import render_template
+
+
 app = API()
 @app.route("/")
 def home(request):
-    return '''
-    <html>
-    <head>
-    <title>
-    Agartha
-    </title>
-    </head>
-    <body>
-    <p>
-    I am Agartha
-    </p>
-    </body>
-    </html>
-    '''
-
+    return render_template("index.html", user="Hasnat", items_list = ["Apple", "Banana", "Cherry"])
 
 @app.route("/about")
 def about(request):
