@@ -30,7 +30,8 @@ def evaluate_loops(content, context):
         variable, iterable_name, block = match.groups()
         output = ""
         for item in context.get(iterable_name, []):
-            output += Template(block).safe_substitute({variable: item})
+            loop_context = {**context, variable: item}
+            output += Template(block).safe_substitute(loop_context)
         return output
     while regex.search(loop_pattern, content, regex.DOTALL):
         content = regex.sub(loop_pattern, replace, content, flags=regex.DOTALL)
@@ -38,11 +39,16 @@ def evaluate_loops(content, context):
     return content
 
 def evaluate_if_statement(content, context):
-    if_pattern = r'%\s*if\s+(\w+)\s*:\s*(.*?)%\s*'
-
+    if_pattern = r'%\s*if\s+(\w+)\s*:\s*(.*?)(?:%\s*else\s*:\s*(.*?))?%\s*end'
     def replace(match):
-        variable, block = match.groups()
-        if context.get(variable):
-            return block
-        return ""
-    return regex.sub(if_pattern, replace, content, flags=regex.DOTALL)
+        variable, if_block, else_block = match.groups()
+        condition = context.get(variable)
+
+        if condition:
+            return Template(if_block).safe_substitute(context)
+        else:
+            return Template(else_block or "").safe_substitute(context)
+    while regex.search(if_pattern, content, regex.DOTALL):
+        content = regex.sub(if_pattern, replace, content, flags=regex.DOTALL)
+
+    return content

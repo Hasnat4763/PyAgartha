@@ -1,6 +1,6 @@
-from webob import Request, Response
+from webob import Request
 import parse
-import json
+from response import Response
 
 
 class API:
@@ -9,8 +9,9 @@ class API:
 
     def __call__(self, env, start_response):
         request = Request(env)
-        response = self.handle_request(request)
-        return response(env, start_response)
+        webob_response = self.handle_request(request)
+        return webob_response(env, start_response)
+
 
     def find_handler(self, reqpath, reqmethod):
         for (path, method), handler in self.routes.items():
@@ -24,25 +25,15 @@ class API:
 
     def handle_request(self, request):
         handler, kwargs = self.find_handler(request.path, request.method)
-
         if handler is None:
-            resp = Response()
-            resp.status_code = 404
-            resp.text = "404 Not Found"
-            return resp
+            return Response("404 Not Found", status=404).send_to_webob()
 
         result = handler(request, **(kwargs or {}))
-
         if isinstance(result, Response):
-            return result
+            return result.send_to_webob()
+        else:
+            return Response(str(result)).send_to_webob()
 
-        if isinstance(result, dict):
-            resp = Response(json_body=result)
-            return resp
-
-        resp = Response()
-        resp.text = str(result)
-        return resp
 
     def route(self, path, method="GET"):
         def wrapper(handler):

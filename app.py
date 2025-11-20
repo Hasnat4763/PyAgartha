@@ -1,11 +1,12 @@
 from api import API
 from templating import render_template
+from response import Response
 
 
 app = API()
 @app.route("/")
 def home(request):
-    return render_template("index.html", user="Hasnat", items = ["Apple", "Banana", "Cherry"], show_footer=True)
+    return Response().html_content(render_template("index.html", user="Hasnat", items = ["Apple", "Banana", "Cherry"], show_footer=True, year=2025))
 
 @app.route("/about")
 def about(request):
