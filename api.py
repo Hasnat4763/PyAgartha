@@ -1,6 +1,7 @@
 from webob import Request
 import parse
 from response import Response
+from templating import render_template
 
 
 class API:
@@ -24,16 +25,21 @@ class API:
         return None, None
 
     def handle_request(self, request):
-        handler, kwargs = self.find_handler(request.path, request.method)
-        if handler is None:
-            return Response("404 Not Found", status=404).send_to_webob()
+        try:
+            handler, kwargs = self.find_handler(request.path, request.method)
+            if handler is None:
+                return Response(status=404).html_content(render_template("404.html", show_error=False)).send_to_webob()
 
-        result = handler(request, **(kwargs or {}))
-        if isinstance(result, Response):
-            return result.send_to_webob()
-        else:
-            return Response(str(result)).send_to_webob()
-
+            result = handler(request, **(kwargs or {}))
+            if isinstance(result, Response):
+                return result.send_to_webob()
+            else:
+                return Response(str(result)).send_to_webob()
+        except Exception as e:
+            import traceback
+            tracebackinfo = traceback.format_exc()
+            print(tracebackinfo)
+            return Response(status=500).html_content(render_template("500.html", e=e, show_error=True)).send_to_webob()
 
     def route(self, path, method="GET"):
         def wrapper(handler):
