@@ -4,6 +4,7 @@ from response import Response
 
 
 app = API()
+app.static_route(static_directory="static")
 @app.route("/")
 def home(request):
     return Response().html_content(render_template("index.html", user="Hasnat", items = ["<a href=\"/about\">about</a>", 
@@ -23,3 +24,4 @@ def about(request):
 @app.route("/sigma/{name}")
 def sigma(request, name):
     return Response().text_content(f"{name} Hi! im gonna hack you")
+
