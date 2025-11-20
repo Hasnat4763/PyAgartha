@@ -15,7 +15,34 @@ def render_template(template_name, **context):
     
     content = evaluate_include(content, lambda match: render_template(match.group(1), **context))
     
-    return template.safe_substitute(**context)
+    content = evaluate_loops(content, context)
+    content = evaluate_if_statement(content, context)
+    return Template(content).safe_substitute(**context)
 
 def evaluate_include(content, replace):
     return regex.sub(regex_pattern, replace, content)
+
+
+def evaluate_loops(content, context):
+    loop_pattern = r'%\s*for\s+(\w+)\s+in\s+(\w+)\s*:\s*(.*?)%\s*end'
+
+    def replace(match):
+        variable, iterable_name, block = match.groups()
+        output = ""
+        for item in context.get(iterable_name, []):
+            output += Template(block).safe_substitute({variable: item})
+        return output
+    while regex.search(loop_pattern, content, regex.DOTALL):
+        content = regex.sub(loop_pattern, replace, content, flags=regex.DOTALL)
+
+    return content
+
+def evaluate_if_statement(content, context):
+    if_pattern = r'%\s*if\s+(\w+)\s*:\s*(.*?)%\s*'
+
+    def replace(match):
+        variable, block = match.groups()
+        if context.get(variable):
+            return block
+        return ""
+    return regex.sub(if_pattern, replace, content, flags=regex.DOTALL)

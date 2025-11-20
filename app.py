@@ -5,7 +5,7 @@ from templating import render_template
 app = API()
 @app.route("/")
 def home(request):
-    return render_template("index.html", user="Hasnat", items_list = ["Apple", "Banana", "Cherry"])
+    return render_template("index.html", user="Hasnat", items = ["Apple", "Banana", "Cherry"], show_footer=True)
 
 @app.route("/about")
 def about(request):
