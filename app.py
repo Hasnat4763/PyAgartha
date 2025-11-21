@@ -19,7 +19,7 @@ def home(request):
 
 @app.route("/about")
 def about(request):
-    return Response().json_content({
+    return app.json_helper({
         "app": "PyAgartha",
         "author": "Hasnat4763",
         "version": "0.6.7",

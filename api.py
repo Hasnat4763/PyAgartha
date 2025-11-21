@@ -98,3 +98,24 @@ class API:
     def Response(self,content, status, content_type, headers):
         from response import Response
         return Response(content=content, status=status, content_type=content_type, headers=headers)
+    
+    
+    def json(self, data, status=200):
+        response = Response(status=status)
+        response.json_content(data)
+        return response
+    
+    def html(self, html, status=200):
+        response = Response(status=status)
+        response.html_content(html)
+        return response
+    
+    def text(self, text, status=200):
+        response = Response(status=status)
+        response.text_content(text)
+        return response
+    
+    def redirect(self, url, status=302):
+        response = Response()
+        response.redirect(url, status=status)
+        return response
