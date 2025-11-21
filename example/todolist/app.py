@@ -29,7 +29,19 @@ TODOS = [
 
 @app.get("/")
 def home(request):
-    return app.render_template("index.html", todos=TODOS)
+    todo_data = []
+    for todo in TODOS:
+        todo_data.append({
+            'task': todo['task'],
+            'id': str(todo['id']),
+            'completed': 'completed' if todo['completed'] else '',
+            'checkbox': '✓' if todo['completed'] else '○'
+        })
+    
+    return app.render_template("index.html", 
+                               todos=TODOS,
+                               todo_list=todo_data,
+                               has_todos='yes' if TODOS else '')
 
 @app.post("/add")
 def add_todo_items(request):
@@ -70,8 +82,41 @@ def get_todo_api(request):
             "pending": len([t for t in TODOS if not t['completed']])
         }
     )
-    
-    
+
+@app.get("/api/todos/{todo_id}")
+def get_todo_status(request, todo_id):
+    todo_id = int(todo_id)
+    todo = next((t for t in TODOS if t["id"] == todo_id), None)
+    if not todo:
+        return app.json({"error": "Not Found"}, status=404)
+    return app.json(todo)
+
+@app.post("/api/todos")
+def add_todo(request):
+    data = request.json
+    if not data or "task" not in data:
+        return app.json({"error": "Task Required"}, status=400)
+
+    new_id = max([t["id"] for t in TODOS], default=0) + 1
+    new_todo = {
+        "id": new_id,
+        "task": data["task"],
+        "completed": False
+    }
+    TODOS.append(new_todo)
+    return app.json(new_todo, status=201)
+
+@app.get("/about")
+def get_about(request):
+    return app.json({
+        "Framework": "PyAgartha",
+        "Version": "0.6.7",
+        "Author": "Hasnat4763",
+        "Description": "A simple and lightweight webn framework for python to be used for small personal projects. Made for learning."
+        
+    })
+
+
 if __name__ == "__main__":
     from wsgiref.simple_server import make_server
     server = make_server("localhost", 8080, app)

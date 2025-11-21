@@ -1,32 +1,42 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>
-        PyAgartha Demo
-        </title>
-        % if css_available:
-        % for css in csses:
-        <link rel="stylesheet" href="${css}">
-        % end
-        % end
-    </head>
-    <body>
-        <h1>
-        Welcome to PyAgartha!
-        </h1>    
-
-        <ul>
-        % for item in items:
-        <li> ${item} </li>
-        % end
-
-        </ul>
-
-        % if show_footer:
-        <footer>
-        PyAgartha © ${year} 
-        </footer>    
-        % end
-
-    </body>
+<head>
+    <title>Goriber Todo List</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+    <h1>Goriber Todo List</h1>
+    <p>All roads lead to Agarthaতলা</p>
+    
+    <hr>
+    
+    <h2>Add New Task</h2>
+    <form method="POST" action="/add">
+        <input type="text" name="task" placeholder="Enter task" required>
+        <button type="submit">Add</button>
+    </form>
+    
+    <hr>
+    
+    <h2>Your Todos:</h2>
+    
+    % for todo in todos:
+    <div style="padding: 10px; border: 1px solid #ccc; margin: 5px;">
+        <form method="POST" action="/complete/$todo[id]" style="display: inline;">
+            <button type="submit">Toggle</button>
+        </form>
+        
+        <strong>$todo[task]</strong>
+        
+        <form method="POST" action="/delete/$todo[id]" style="display: inline;">
+            <button type="submit">Delete</button>
+        </form>
+    </div>
+    % end
+    
+    <hr>
+    
+    <p><a href="/api/todos">View API</a> | <a href="/about">About</a></p>
+    <p><em>Agartha Exists! 🗿</em></p>
+</body>
 </html>
