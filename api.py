@@ -19,7 +19,10 @@ class API:
         for (path, method), handler in self.routes.items():
             if method != reqmethod:
                 continue
-            parse_result = parse.parse(path, reqpath)
+            
+            convert_path = path.replace("<", "{").replace(">", "}")
+            
+            parse_result = parse.parse(convert_path, reqpath)
             if parse_result is not None:
                 return handler, parse_result.named
         return None, None
@@ -70,6 +73,22 @@ class API:
             self.routes[(path, method)] = handler
             return handler
         return wrapper
+    
+    def get(self, path):
+        return self.route(path, method="GET")
+    
+    def post(self, path):
+        return self.route(path, method="POST")
+    
+    def put(self, path):
+        return self.route(path, method="PUT")
+    
+    def delete(self, path):
+        return self.route(path, method="DELETE")
+    
+    def patch(self, path):
+        return self.route(path, method="PATCH")
+    
     def add_b4_req(self, func):
         self.b4_req.append(func)
         
