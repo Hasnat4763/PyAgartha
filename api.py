@@ -1,3 +1,4 @@
+import os
 from webob import Request
 import parse
 from response import Response
@@ -30,7 +31,12 @@ class API:
                 return self.static_handler.serve_static(request.path)
             handler, kwargs = self.find_handler(request.path, request.method)
             if handler is None:
-                return Response(status=404).html_content(render_template("404.html", show_error=False)).send_to_webob()
+                response = Response(status=404)
+                if os.path.exists("templates/404.html"):
+                    response.html_content(render_template("404.html", show_error=False))
+                else:
+                    response.text_content("404 Not Found")
+                return response.send_to_webob()
             result = handler(request, **(kwargs or {}))
             if not isinstance(result, Response):
                 result =  Response(str(result))
@@ -41,7 +47,12 @@ class API:
             import traceback
             tracebackinfo = traceback.format_exc()
             print(tracebackinfo)
-            return Response(status=500).html_content(render_template("500.html", e=e, show_error=True)).send_to_webob()
+            response = Response(status=500)
+            if os.path.exists("templates/500.html"):
+                response.html_content(render_template("500.html", e=e, show_error=True))
+            else:
+                response.text_content("500 Internal Server Error \n\n" + str(e))
+            return response.send_to_webob()
     def static_route(self, static_directory="static"):
         from static_serve import StaticServe
         self.static_handler = StaticServe(static_directory)

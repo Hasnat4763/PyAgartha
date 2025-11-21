@@ -4,10 +4,15 @@
         <title>
         PyAgartha Demo
         </title>
+        % if css_available:
+        % for css in csses:
+        <link rel="stylesheet" href="${css}">
+        % end
+        % end
     </head>
     <body>
         <h1>
-        Welcome ${user} to PyAgartha!
+        Welcome to PyAgartha!
         </h1>    
 
         <ul>

@@ -10,9 +10,6 @@ def render_template(template_name, **context):
     path = os.path.join(template_dir, template_name)
     with open(path, "r", encoding = "utf-8") as f:
         content = f.read()
-
-    template = Template(content)
-    
     content = evaluate_include(content, lambda match: render_template(match.group(1), **context))
     
     content = evaluate_loops(content, context)
