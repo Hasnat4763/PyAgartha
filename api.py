@@ -1,5 +1,5 @@
 import os
-from webob import Request
+from request import Request
 import parse
 from response import Response
 from templating import render_template
