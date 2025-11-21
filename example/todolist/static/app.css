@@ -1,3 +1,18 @@
 body{
-    background-color: rgb(255, 0, 43);
+    background-color: black;
+    color: blue;
+    text-align: center;
+    button{
+        background-color: grey;
+        color: white;
+        border-radius: 5px;
+    }
+    button:hover{
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
+    footer{
+        margin-top: 4cm;
+    }
 }

@@ -2,7 +2,7 @@ import os
 import sys
 import os
 
-BASE = os.path.dirname(__file__)  # example/todolist
+BASE = os.path.dirname(__file__)
 STATIC_DIR = os.path.join(BASE, "static")
 TEMPLATE_DIR = os.path.join(BASE, "templates")
 
