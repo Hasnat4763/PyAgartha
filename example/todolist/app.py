@@ -1,11 +1,16 @@
 import os
 import sys
+import os
+
+BASE = os.path.dirname(__file__)  # example/todolist
+STATIC_DIR = os.path.join(BASE, "static")
+TEMPLATE_DIR = os.path.join(BASE, "templates")
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
 from api import API
 app = API()
-app.static_route(static_directory="example/todolist/static")
-app.template_path("example/todolist/templates")
+app.static_route(static_directory=STATIC_DIR)
+app.template_path(TEMPLATE_DIR)
 
 TODOS = [
     {
@@ -29,19 +34,7 @@ TODOS = [
 
 @app.get("/")
 def home(request):
-    todo_data = []
-    for todo in TODOS:
-        todo_data.append({
-            'task': todo['task'],
-            'id': str(todo['id']),
-            'completed': 'completed' if todo['completed'] else '',
-            'checkbox': '✓' if todo['completed'] else '○'
-        })
-    
-    return app.render_template("index.html", 
-                               todos=TODOS,
-                               todo_list=todo_data,
-                               has_todos='yes' if TODOS else '')
+    return app.render_template("index.html", todos=TODOS)
 
 @app.post("/add")
 def add_todo_items(request):

@@ -3,6 +3,7 @@
 <head>
     <title>Goriber Todo List</title>
     <meta charset="UTF-8">
+    <link rel = "stylesheet" href="/static/app.css">
 </head>
 <body>
     <h1>Goriber Todo List</h1>
@@ -26,7 +27,7 @@
             <button type="submit">Toggle</button>
         </form>
         
-        <strong>$todo[task]</strong>
+        <strong>$todo[task], $todo[completed]</strong>
         
         <form method="POST" action="/delete/$todo[id]" style="display: inline;">
             <button type="submit">Delete</button>

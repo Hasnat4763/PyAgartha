@@ -26,6 +26,9 @@ class StaticServe:
                 status=404,
                 content=render_template("404.html")
             )
+        print("Static request:", filepath)
+        print("Full static path:", full_path)
+        print("Static directory abs:", static_dir_abs)
 
         try:
             content_type, _ = mimetypes.guess_type(full_path)
@@ -45,3 +48,4 @@ class StaticServe:
                 status=500,
                 content=render_template("500.html", e=e, show_error=True)
             )
+        

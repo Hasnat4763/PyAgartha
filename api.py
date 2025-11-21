@@ -31,7 +31,7 @@ class API:
             for func in self.b4_req:
                 func(request)
             if self.static_handler and request.path.startswith("/static/"):
-                return self.static_handler.serve_static(request.path)
+                return self.static_handler.serve_static(request.path).send_to_webob()
             handler, kwargs = self.find_handler(request.path, request.method)
             if handler is None:
                 response = Response(status=404)
