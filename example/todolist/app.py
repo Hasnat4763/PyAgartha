@@ -32,6 +32,22 @@ TODOS = [
 ]
 
 
+@app.add_b4_req
+def log_req(request):
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] Incoming request: {request.method} {request.path}")
+    return None
+
+@app.add_after_req
+def log_response(request, response):
+    import datetime
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{timestamp}] Response status: {response.status} for {request.method} {request.path}")
+    return response
+
+
+
 @app.get("/")
 def home(request):
     return app.render_template("index.html", todos=TODOS)

@@ -3,15 +3,17 @@ from request import Request
 import parse
 from response import Response
 from templating import render_template
+from middleware import Middleware
 class API:
     def __init__(self):
         self.routes = {}
         self.static_handler = None
-        self.b4_req = []
-        self.after_req = []
+        self.middleware = Middleware()
+        
     def __call__(self, env, start_response):
+        import asyncio
         request = Request(env)
-        response = self.handle_request(request)
+        response = asyncio.run(self.handle_request(request))
         if isinstance(response, Response):
             response = response.send_to_webob()
         return response(env, start_response)
@@ -26,10 +28,11 @@ class API:
             if parse_result is not None:
                 return handler, parse_result.named
         return None, None
-    def handle_request(self, request):
+    async def handle_request(self, request):
         try:
-            for func in self.b4_req:
-                func(request)
+            early_response = await self.middleware.execute_b4(request)
+            if early_response is not None:
+                return await early_response.send_to_webob()
             if self.static_handler and request.path.startswith("/static/"):
                 return self.static_handler.serve_static(request.path).send_to_webob()
             handler, kwargs = self.find_handler(request.path, request.method)
@@ -43,8 +46,7 @@ class API:
             result = handler(request, **(kwargs or {}))
             if not isinstance(result, Response):
                 result =  Response(str(result))
-            for func in self.after_req:
-                func(request, result)
+            result = await self.middleware.execute_after(request, result)
             return result.send_to_webob()
         except Exception as e:
             import traceback
@@ -90,10 +92,10 @@ class API:
         return self.route(path, method="PATCH")
     
     def add_b4_req(self, func):
-        self.b4_req.append(func)
+        self.middleware.b4_req.append(func)
         
     def add_after_req(self, func):
-        self.after_req.append(func)
+        self.middleware.after_req.append(func)
     
     def Response(self,content, status, content_type, headers):
         from response import Response
