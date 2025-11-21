@@ -4,7 +4,13 @@ import regex
 
 regex_pattern = r'\{\s*([\w\-/]+\.html)\s*\}'
 
+dir_name = ""
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
+def template_path(name):
+    global dir_name
+    global template_dir
+    dir_name = name
+    template_dir = os.path.join(os.path.dirname(__file__), str(dir_name))
 
 def render_template(template_name, **context):
     path = os.path.join(template_dir, template_name)

@@ -1,10 +1,12 @@
 from api import API
 from templating import render_template
+import templating
 from response import Response
 
 
 app = API()
 app.static_route(static_directory="static")
+templating.template_path("htmls")
 @app.route("/")
 def home(request):
     return Response().html_content(render_template("index.html", items = ["<a href=\"/about\">about</a>", 
