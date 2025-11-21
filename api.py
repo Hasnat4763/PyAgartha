@@ -56,6 +56,15 @@ class API:
     def static_route(self, static_directory="static"):
         from static_serve import StaticServe
         self.static_handler = StaticServe(static_directory)
+    
+    def template_path(self, name):
+        import templating
+        templating.template_path(name)
+    
+    def render_template(self, template_name, **context):
+        from templating import render_template
+        return render_template(template_name, **context)
+    
     def route(self, path, method="GET"):
         def wrapper(handler):
             self.routes[(path, method)] = handler
@@ -66,3 +75,7 @@ class API:
         
     def add_after_req(self, func):
         self.after_req.append(func)
+    
+    def Response(self,content, status, content_type, headers):
+        from response import Response
+        return Response(content=content, status=status, content_type=content_type, headers=headers)
