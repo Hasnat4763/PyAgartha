@@ -34,7 +34,11 @@
         </form>
     </div>
     % end
-    
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file">
+        <button type="submit">Upload</button>
+    </form>
+
     <hr>
     <footer>
     <p><a href="/api/todos">View API</a> | <a href="/about">About</a></p>

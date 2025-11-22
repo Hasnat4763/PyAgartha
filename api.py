@@ -2,6 +2,7 @@ import os
 from request import Request
 import parse
 from response import Response
+from sessions import SessionManager
 from templating import render_template
 from middleware import Middleware
 class API:
@@ -9,14 +10,15 @@ class API:
         self.routes = {}
         self.static_handler = None
         self.middleware = Middleware()
+        self.sessions = SessionManager()
         
     def __call__(self, env, start_response):
-        import asyncio
         request = Request(env)
-        response = asyncio.run(self.handle_request(request))
+        response = self.handle_request(request)
         if isinstance(response, Response):
             response = response.send_to_webob()
         return response(env, start_response)
+
     def find_handler(self, reqpath, reqmethod):
         for (path, method), handler in self.routes.items():
             if method != reqmethod:
@@ -28,13 +30,40 @@ class API:
             if parse_result is not None:
                 return handler, parse_result.named
         return None, None
-    async def handle_request(self, request):
+    
+    
+    def handle_request(self, request):
         try:
-            early_response = await self.middleware.execute_b4(request)
+            
+            # Before Middleware
+            
+            early_response = self.middleware.execute_b4(request)
             if early_response is not None:
-                return await early_response.send_to_webob()
+                    return early_response
+
+            
+            #Static File Serving
+            
             if self.static_handler and request.path.startswith("/static/"):
-                return self.static_handler.serve_static(request.path).send_to_webob()
+                result = self.static_handler.serve_static(request.path)
+                return result.send_to_webob()
+
+            
+            # Session Management
+            
+            cookie = request.cookies.get("session_id")
+            session = self.sessions.get(cookie)
+            if session is None:
+                cookie = self.sessions.create_session()
+                session = self.sessions.get(cookie)
+
+            if session is not None:
+                request.session = session["data"]
+            else:
+                request.session = {}
+
+            # Routing
+            
             handler, kwargs = self.find_handler(request.path, request.method)
             if handler is None:
                 response = Response(status=404)
@@ -42,12 +71,27 @@ class API:
                     response.html_content(render_template("404.html", show_error=False))
                 else:
                     response.text_content("404 Not Found")
+                    
+                response.set_cookie("session_id", cookie)
                 return response.send_to_webob()
+        
+            # user Handler calling
+        
             result = handler(request, **(kwargs or {}))
-            if not isinstance(result, Response):
-                result =  Response(str(result))
-            result = await self.middleware.execute_after(request, result)
-            return result.send_to_webob()
+            if isinstance(result, Response):
+                result = result.send_to_webob()
+            elif isinstance(result, str):
+                result = Response(result).send_to_webob()
+                            
+            # After Middleware    
+                
+            for fn in self.middleware.after_req:
+                after = fn(request, result)
+                if after:
+                    return after
+
+            result.set_cookie("session_id", cookie)
+            return result
         except Exception as e:
             import traceback
             tracebackinfo = traceback.format_exc()
@@ -99,25 +143,25 @@ class API:
     
     def Response(self,content, status, content_type, headers):
         from response import Response
-        return Response(content=content, status=status, content_type=content_type, headers=headers)
+        return Response(content=content, status=status, content_type=content_type, headers=headers).send_to_webob()
     
     
     def json(self, data, status=200):
         response = Response(status=status)
         response.json_content(data)
-        return response
+        return response.send_to_webob()
     
     def html(self, html, status=200):
         response = Response(status=status)
         response.html_content(html)
-        return response
+        return response.send_to_webob()
     
     def text(self, text, status=200):
         response = Response(status=status)
         response.text_content(text)
-        return response
+        return response.send_to_webob()
     
-    def redirect(self, url, status=302):
+    def redirect(self, url, status=303):
         response = Response()
         response.redirect(url, status=status)
-        return response
+        return response.send_to_webob()

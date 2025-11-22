@@ -21,25 +21,21 @@ class Middleware:
         self.add_after(func)
         return func
     
-    async def execute_b4(self, request) -> Optional[Any]:
+    def execute_b4(self, request) -> Optional[Any]:
         for func in self.b4_req:
-            res = await self._call(func, request)
+            res =  self._call(func, request)
             if res is not None:
                 return res
         return None
                 
-    async def execute_after(self, request, response) -> Any:
+    def execute_after(self, request, response) -> Any:
         current = response
         for func in self.after_req:
-            res = await self._call(func, request, current)
+            res = self._call(func, request, current)
             if res is not None:
                 current = res
         return current
     
-    async def _call(self, func: Callable[..., Any], *args, **kwargs) -> Any:
+    def _call(self, func: Callable[..., Any], *args, **kwargs) -> Any:
         result = func(*args, **kwargs)
-        
-        if inspect.iscoroutine(result):
-            return await result
-        
         return result

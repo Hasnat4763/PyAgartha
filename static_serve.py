@@ -38,10 +38,11 @@ class StaticServe:
                 data = f.read()
 
             return Response(
-                status=200,
-                content_type=content_type,
-                content=data
-            )
+            status=200,
+            content_type=content_type,
+            content=data
+        )
+
 
         except Exception as e:
             return Response(

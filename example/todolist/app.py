@@ -69,7 +69,7 @@ def mark_completed(request, todo_id):
         if todo["id"] == todo_id:
             todo["completed"] = not todo["completed"]
             break
-    return app.redirect("/")
+    return app.redirect("/", status=302)
 
 @app.post("/delete/{todo_id}")
 def delete_todo(request, todo_id):
@@ -124,6 +124,21 @@ def get_about(request):
         "Description": "A simple and lightweight webn framework for python to be used for small personal projects. Made for learning."
         
     })
+    
+@app.post("/upload")
+def upload_file(request):
+    uploaded_file = request.files.get("file")
+    if uploaded_file is None:
+        return app.text("No file uploaded", status=400)
+    
+    upload_dir = "uploads"
+    os.makedirs(upload_dir, exist_ok=True)
+    file_path = os.path.join(upload_dir, uploaded_file.filename)
+    with open(file_path, "wb") as f:
+        f.write(uploaded_file.file.read())
+    
+    return app.redirect("/")
+
 
 
 if __name__ == "__main__":
