@@ -1,10 +1,10 @@
 import os
-from request import Request
+from .request import Request
 import parse
-from response import Response
-from sessions import SessionManager
-from templating import render_template
-from middleware import Middleware
+from .response import Response
+from .sessions import SessionManager
+from .templating import render_template
+from .middleware import Middleware
 class API:
     def __init__(self):
         self.routes = {}

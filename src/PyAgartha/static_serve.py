@@ -1,8 +1,6 @@
 from response import Response
-from webob import Response as WebobResponse
-from wsgiref.util import FileWrapper
 import os, mimetypes
-from templating import render_template
+from .templating import render_template
 
 class StaticServe:
     def __init__(self, static_directory="static"):

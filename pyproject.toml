@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PyAgartha"
-version = "0.0.1"
+version = "0.0.4"
 authors = [
   { name="Hasnat4763", email="contact@hasnat4763.me" },
 ]
@@ -17,18 +17,17 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
 ]
-
 dependencies = [
     "parse",
     "webob",
     "Jinja2",
     "waitress",
+    "regex",
 ]
 
 [project.urls]
 Homepage = "https://github.com/Hasnat4763/PyAgartha"
 Issues = "https://github.com/Hasnat4763/PyAgartha/issues"
 
-
 [tool.setuptools.packages.find]
-where = ["."]
+where = ["src"]
