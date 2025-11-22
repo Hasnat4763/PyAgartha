@@ -10,7 +10,7 @@ A lightweight web framework inspired from Flask
 
 It's function and routing is just like Flask
 
-There is a basic demo "TO DO List" app in [/example/todolist](Demo App) which you can check out
+There is a basic demo "TO DO List" app in [`/example/todolist`](Demo App) which you can check out
 
 ```python
 from pyagartha import API
