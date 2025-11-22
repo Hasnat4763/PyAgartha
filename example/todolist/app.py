@@ -69,7 +69,7 @@ def mark_completed(request, todo_id):
         if todo["id"] == todo_id:
             todo["completed"] = not todo["completed"]
             break
-    return app.redirect("/", status=302)
+    return app.redirect("/")
 
 @app.post("/delete/{todo_id}")
 def delete_todo(request, todo_id):
@@ -136,9 +136,8 @@ def upload_file(request):
     file_path = os.path.join(upload_dir, uploaded_file.filename)
     with open(file_path, "wb") as f:
         f.write(uploaded_file.file.read())
-    
+    #return app.text(f"File '{uploaded_file.filename}' uploaded successfully to '{file_path}'", status=303)
     return app.redirect("/")
-
 
 
 if __name__ == "__main__":
