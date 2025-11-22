@@ -3,3 +3,4 @@ webob
 Jinja2
 waitress
 regex
+watchdog

@@ -5,6 +5,7 @@ from .response import Response
 from .sessions import SessionManager
 from .templating import render_template
 from .middleware import Middleware
+from .templating import template_path, render_template
 class API:
     def __init__(self):
         self.routes = {}
@@ -103,15 +104,13 @@ class API:
                 response.text_content("500 Internal Server Error \n\n" + str(e))
             return response.send_to_webob()
     def static_route(self, static_directory="static"):
-        from static_serve import StaticServe
+        from .static_serve import StaticServe
         self.static_handler = StaticServe(static_directory)
     
     def template_path(self, name):
-        import templating
-        templating.template_path(name)
+        template_path(name)
     
     def render_template(self, template_name, **context):
-        from templating import render_template
         return render_template(template_name, **context)
     
     def route(self, path, method="GET"):
@@ -142,7 +141,6 @@ class API:
         self.middleware.after_req.append(func)
     
     def Response(self,content, status, content_type, headers):
-        from response import Response
         return Response(content=content, status=status, content_type=content_type, headers=headers).send_to_webob()
     
     
