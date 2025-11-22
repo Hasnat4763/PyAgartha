@@ -12,12 +12,12 @@ It's function and routing is just like Flask
 
 There is a basic demo "TO DO List" app in [`/example/todolist`](/example) which you can check out
 
-```python
+```Python
 from pyagartha import API
 
 app = API()
 
-@app.route("/)
+@app.route("/")
 def home(request):
     response.text = "Hello, World!
 
