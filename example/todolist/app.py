@@ -7,7 +7,7 @@ STATIC_DIR = os.path.join(BASE, "static")
 TEMPLATE_DIR = os.path.join(BASE, "templates")
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
-from api import API
+from pyagartha import API
 app = API()
 app.static_route(static_directory=STATIC_DIR)
 app.template_path(TEMPLATE_DIR)

@@ -1,0 +1,70 @@
+Metadata-Version: 2.4
+Name: PyAgartha
+Version: 0.0.1
+Summary: A lightweight web framework for python inspired from Flask
+Author-email: Hasnat4763 <contact@hasnat4763.me>
+License: MIT License
+        
+        Copyright (c) 2025 MD Abul Hasnat
+        
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+        of this software and associated documentation files (the "Software"), to deal
+        in the Software without restriction, including without limitation the rights
+        to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+        copies of the Software, and to permit persons to whom the Software is
+        furnished to do so, subject to the following conditions:
+        
+        The above copyright notice and this permission notice shall be included in all
+        copies or substantial portions of the Software.
+        
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+        
+Project-URL: Homepage, https://github.com/Hasnat4763/PyAgartha
+Project-URL: Issues, https://github.com/Hasnat4763/PyAgartha/issues
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: parse
+Requires-Dist: webob
+Requires-Dist: Jinja2
+Requires-Dist: waitress
+Dynamic: license-file
+
+# PyAgartha
+
+A lightweight web framework inspired from Flask
+
+# Installation
+
+```bash
+pip install pyagartha
+```
+
+# Usage
+
+It's function and routing is just like Flask
+
+There is a basic demo "TO DO List" app in [Demo](example/todolist/) which you can check out
+
+```python
+from pyagartha import API
+
+app = API()
+
+@app.route("/")
+def home(request):
+    response.text = "Hello, World!
+```
+
+# License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details

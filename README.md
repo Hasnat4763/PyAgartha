@@ -4,7 +4,9 @@ A lightweight web framework inspired from Flask
 
 # Installation
 
-
+```bash
+pip install pyagartha
+```
 
 # Usage
 
