@@ -24,6 +24,13 @@ def home(request):
     response.text = "Hello, World!
 ```
 
+# Demo website
+
+```
+http://164.92.186.218:8080/
+```
+
+
 # License
 
 This project is licensed under the MIT License - see [LICENSE](LICENSE) for details
