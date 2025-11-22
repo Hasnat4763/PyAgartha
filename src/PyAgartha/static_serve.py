@@ -1,4 +1,4 @@
-from response import Response
+from .response import Response
 import os, mimetypes
 from .templating import render_template
 

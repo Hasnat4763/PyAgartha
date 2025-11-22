@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "PyAgartha"
-version = "0.0.5"
+version = "0.0.6"
 authors = [
   { name="Hasnat4763", email="contact@hasnat4763.me" },
 ]

@@ -1,4 +1,5 @@
 import os
+import traceback
 from .request import Request
 import parse
 from .response import Response
@@ -6,6 +7,7 @@ from .sessions import SessionManager
 from .templating import render_template
 from .middleware import Middleware
 from .templating import template_path, render_template
+from .static_serve import StaticServe
 class API:
     def __init__(self):
         self.routes = {}
@@ -94,7 +96,6 @@ class API:
             result.set_cookie("session_id", cookie)
             return result
         except Exception as e:
-            import traceback
             tracebackinfo = traceback.format_exc()
             print(tracebackinfo)
             response = Response(status=500)
@@ -104,7 +105,6 @@ class API:
                 response.text_content("500 Internal Server Error \n\n" + str(e))
             return response.send_to_webob()
     def static_route(self, static_directory="static"):
-        from .static_serve import StaticServe
         self.static_handler = StaticServe(static_directory)
     
     def template_path(self, name):
