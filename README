@@ -1,27 +1,32 @@
 # PyAgartha
 
-A lightweight web framework inspired from Flask
+A lightweight web framework inspired by Flask.
 
-# Installation
+## Installation
 
+To install PyAgartha directly from the GitHub repository, you can use `pip`:
 
+```bash
+pip install git+https://github.com/Hasnat4763/PyAgartha.git
+```
 
-# Usage
+## Usage
 
-It's function and routing is just like Flask
+PyAgartha's functions and routing are similar to Flask.
 
-There is a basic demo "TO DO List" app in [Demo](example/todolist/) which you can check out
+There is a basic demo "TO DO List" app in the [Demo](example/todolist/) which you can check out.
 
+Here is a simple "Hello World" example:
 ```python
 from pyagartha import API
 
 app = API()
 
 @app.route("/")
-def home(request):
-    response.text = "Hello, World!
+def home(request, response):
+    response.text = "Hello, World!"
 ```
 
-# License
+## License
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
